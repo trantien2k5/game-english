@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ thống Thi Trắc Nghiệm Online</title>
+    <!-- Google Fonts: Inter & Outfit cho thiết kế hiện đại -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- Boxicons cho icon nhẹ và đẹp -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- File CSS tự định nghĩa -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- 1. MÀN HÌNH CHÍNH (HOME VIEW) -->
+    <section id="home-view" class="view-section active">
+        <header class="app-header">
+            <div class="logo">
+                <i class='bx bx-book-open'></i>
+                <span>EduQuiz</span>
+            </div>
+            <button class="btn-primary" id="btn-show-import">
+                <i class='bx bx-plus'></i> Tạo Đề Thi
+            </button>
+        </header>
+
+        <main class="container">
+            <div class="hero-section">
+                <h1>Hệ thống Ôn luyện & Thi Thử</h1>
+                <p>Chọn một bài thi bên dưới để bắt đầu hoặc nhập đề thi mới của bạn.</p>
+            </div>
+
+            <div class="exam-list-container">
+                <h2 class="section-title">Danh sách Đề Thi</h2>
+                <div class="exam-grid" id="exam-list">
+                    <div class="empty-state">
+                        <i class='bx bx-ghost'></i>
+                        <p>Chưa có đề thi nào. Hãy thêm đề thi mới!</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </section>
+
+    <!-- 2. MÀN HÌNH NHẬP ĐỀ THI (IMPORT VIEW) -->
+    <section id="import-view" class="view-section hidden">
+        <header class="app-header">
+            <button class="btn-ghost" id="btn-back-home">
+                <i class='bx bx-arrow-back'></i> Quay lại
+            </button>
+            <div class="logo">
+                <span>Nhập Đề Thi Mới</span>
+            </div>
+            <div>
+                <button class="btn-primary" id="btn-save-exam">
+                    <i class='bx bx-save'></i> Lưu đề thi
+                </button>
+            </div>
+        </header>
+
+        <main class="import-layout">
+            <!-- Cột trái: Cấu hình và văn bản -->
+            <div class="import-config glass-panel">
+                <h3 class="section-title" style="font-size: 1.1rem; margin-bottom: 15px;">Thông tin & Dữ liệu</h3>
+                
+                <div class="form-group">
+                    <label for="exam-title">Tên bài thi</label>
+                    <input type="text" id="exam-title" placeholder="VD: Đề thi thử THPT Quốc Gia Tiếng Anh">
+                </div>
+
+                <div class="form-group">
+                    <label for="exam-duration">Thời gian (Phút)</label>
+                    <input type="number" id="exam-duration" placeholder="60" value="60">
+                </div>
+
+                <div class="form-group" style="margin-top: 20px;">
+                    <label for="exam-content">Nội dung đề thi thô (Raw Text)</label>
+                    <div class="helper-text">
+                        Bắt đầu câu bằng <code>Câu 1:</code>, các lựa chọn <code>A. </code>, <code>B. </code>, đáp án đúng <code>Đáp án: A</code>, giải thích (nếu có) <code>Giải thích: ...</code>
+                    </div>
+                    <textarea id="exam-content" rows="12" placeholder="Dán văn bản đề thi của bạn vào đây..."></textarea>
+                    
+                    <button class="btn-outline w-100" id="btn-parse-text" style="margin-top: 15px; color: var(--primary); border-color: var(--primary);">
+                        Phân tích Dữ liệu <i class='bx bx-right-arrow-alt'></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Cột phải: Preview -->
+            <div class="import-preview glass-panel">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--gray-200); padding-bottom: 10px;">
+                    <h3 class="section-title" style="margin-bottom:0; font-size: 1.1rem;">Bản xem trước (<span id="preview-count">0</span> câu)</h3>
+                </div>
+                
+                <div id="preview-list">
+                    <div class="empty-state">
+                        <i class='bx bx-file-blank' style="font-size: 2.5rem;"></i>
+                        <p>Dán văn bản đề thi bên trái và bấm "Phân tích" để xem cấu trúc đề thi tại đây.</p>
+                    </div>
+                    <!-- Các câu hỏi render vào đây để tinh chỉnh -->
+                </div>
+            </div>
+        </main>
+    </section>
+
+    <!-- 3. MÀN HÌNH LÀM BÀI (QUIZ VIEW) -->
+    <section id="quiz-view" class="view-section hidden">
+        <header class="quiz-header">
+            <div class="quiz-info">
+                <h2 id="quiz-running-title">Đang tải...</h2>
+            </div>
+            <div class="quiz-meta">
+                <span class="timer-badge">
+                    <i class='bx bx-time-five'></i>
+                    <span id="quiz-timer">00:00</span>
+                </span>
+            </div>
+        </header>
+
+        <main class="quiz-layout">
+            <!-- Vùng câu hỏi chính (Left) -->
+            <div class="quiz-main-area" id="quiz-main-area">
+                <div class="quiz-progress-top" id="quiz-progress-top">
+                    Câu <span id="current-q-num">1</span> / <span id="total-q-num">10</span>
+                </div>
+                
+                <div id="questions-container">
+                    <!-- Dynamic question cards render here -->
+                </div>
+
+                <div class="quiz-navigation" id="quiz-bottom-nav">
+                    <button class="btn-secondary" id="btn-prev-q" style="flex:1"><i class='bx bx-chevron-left'></i> <span class="nav-text">Câu trước</span></button>
+                    <button class="btn-secondary d-mobile" id="btn-open-palette" style="flex:1"><i class='bx bx-grid-alt'></i> Danh sách</button>
+                    <button class="btn-primary" id="btn-next-q" style="flex:1"><span class="nav-text">Câu tiếp</span> <i class='bx bx-chevron-right'></i></button>
+                </div>
+            </div>
+
+            <!-- Sidebar (Right PC / Bottom Sheet Mobile) -->
+            <aside class="quiz-sidebar glass-panel" id="quiz-sidebar">
+                <div class="sidebar-header">
+                    <h3 style="font-size: 1rem;">Danh sách câu hỏi</h3>
+                    <button class="btn-close-sidebar d-mobile" id="btn-close-sidebar" style="background:none; border:none; font-size:1.5rem; cursor:pointer;"><i class='bx bx-x'></i></button>
+                </div>
+                <div class="question-palette" id="question-palette">
+                    <!-- Palette render từ JS -->
+                </div>
+                <div class="sidebar-footer">
+                    <button class="btn-danger w-100" id="btn-submit-quiz" style="padding: 12px; font-size: 1rem; border-radius: 8px;"><i class='bx bx-check-double'></i> Nộp bài thi</button>
+                </div>
+            </aside>
+            
+            <!-- Mobile Overlay for Bottom Sheet -->
+            <div id="palette-overlay" class="overlay hidden d-mobile"></div>
+        </main>
+    </section>
+
+    <!-- 4. MÀN HÌNH KẾT QUẢ (RESULT VIEW) -->
+    <section id="result-view" class="view-section hidden">
+        <header class="app-header">
+            <button class="btn-primary" id="btn-back-home-from-result">
+                <i class='bx bx-home'></i> Về trang chủ
+            </button>
+        </header>
+
+        <main class="container">
+            <div class="result-summary glass-panel">
+                <div class="score-circle">
+                    <span id="final-score">0</span>
+                    <small>Điểm</small>
+                </div>
+                <div class="result-stats">
+                    <div class="stat-item correct">
+                        <i class='bx bx-check-circle'></i>
+                        <span id="stat-correct">0</span> Đúng
+                    </div>
+                    <div class="stat-item incorrect">
+                        <i class='bx bx-x-circle'></i>
+                        <span id="stat-incorrect">0</span> Sai
+                    </div>
+                    <div class="stat-item unattempted">
+                        <i class='bx bx-minus-circle'></i>
+                        <span id="stat-unattempted">0</span> Bỏ qua
+                    </div>
+                </div>
+            </div>
+
+            <div class="review-section">
+                <h3 class="section-title">Xem chi tiết bài làm</h3>
+                <div class="review-list" id="review-list">
+                    <!-- Danh sách câu hỏi kèm đáp án đúng sai render từ JS -->
+                </div>
+            </div>
+        </main>
+    </section>
+
+    <!-- 4. MÀN HÌNH CHI TIẾT ĐỀ THI (DETAIL VIEW) -->
+    <section id="detail-view" class="view-section hidden">
+        <header class="app-header">
+            <button class="btn-ghost" id="btn-back-home-from-detail">
+                <i class='bx bx-arrow-back'></i> Quay lại
+            </button>
+            <div class="logo">
+                <span>Chi tiết Đề Thi</span>
+            </div>
+            <div style="width: 100px;"></div> <!-- Spacer -->
+        </header>
+
+        <main class="detail-layout">
+            <!-- Mobile Tabs -->
+            <div class="mobile-detail-tabs hide-on-pc">
+                <button class="mobile-tab-btn active" data-target="config"><i class='bx bx-play-circle'></i> Làm bài</button>
+                <button class="mobile-tab-btn" data-target="preview"><i class='bx bx-list-ul'></i> Cấu trúc & Lịch sử</button>
+            </div>
+
+            <!-- Cột trái: Cấu hình và nút bắt đầu -->
+            <div class="detail-config glass-panel" style="padding: 30px; text-align: center;">
+                <div class="exam-icon" style="font-size: 3rem; color: var(--primary); margin-bottom: 20px;">
+                    <i class='bx bxs-graduation'></i>
+                </div>
+                <h2 id="detail-exam-title" style="font-size: 1.5rem; margin-bottom: 15px;">Tên bài thi</h2>
+                
+                <div class="exam-meta-large" style="display: flex; justify-content: center; gap: 20px; color: var(--gray-600); margin-bottom: 30px; font-size: 1rem;">
+                    <span><i class='bx bx-time'></i> <span id="detail-exam-duration">60</span> Phút</span>
+                    <span><i class='bx bx-list-ol'></i> <span id="detail-exam-count">20</span> Câu hỏi</span>
+                </div>
+
+                <div class="exam-config-box" style="background: var(--gray-50); padding: 20px; border-radius: 12px; border: 1px solid var(--gray-200); text-align: left; margin-bottom: 30px;">
+                    <h3 style="margin-bottom: 15px; font-size: 1rem;">Cấu hình làm bài</h3>
+                    
+                    <div class="form-group">
+                        <label>Chế độ làm bài</label>
+                        <select id="start-mode" style="background: white;">
+                            <option value="exam">Thi thật (Đếm ngược thời gian)</option>
+                            <option value="practice">Luyện tập (Hiển thị đáp án ngay)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 15px;">
+                        <label>Chế độ hiển thị</label>
+                        <select id="start-view-mode" style="background: white;">
+                            <option value="single">Xem từng câu (Cuộn ngang)</option>
+                            <option value="list">Xem toàn bộ danh sách (Cuộn dọc)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="display: flex; align-items: center; gap: 12px; margin-bottom: 0; margin-top: 15px;">
+                        <input type="checkbox" id="start-shuffle" checked style="width: 20px; height: 20px; cursor: pointer; accent-color: var(--primary);">
+                        <label for="start-shuffle" style="margin-bottom: 0; cursor: pointer; font-size: 0.95rem;">Đảo ngẫu nhiên câu hỏi và đáp án</label>
+                    </div>
+                </div>
+
+                <button class="btn-primary" id="btn-confirm-start" style="font-size: 1.15rem; padding: 16px 20px; width: 100%; border-radius: 12px; box-shadow: 0 10px 20px rgba(79, 70, 229, 0.2);">
+                    BẮT ĐẦU LÀM BÀI <i class='bx bx-play-circle' style="font-size: 1.3rem;"></i>
+                </button>
+            </div>
+
+            <!-- Cột phải: Tabs (Nội dung / Lịch sử) -->
+            <div class="detail-preview glass-panel" style="display: flex; flex-direction: column; padding: 20px 24px;">
+                
+                <div class="detail-tabs">
+                    <button class="detail-tab-btn active" data-tab="content"><i class='bx bx-list-ul'></i> Cấu trúc đề</button>
+                    <button class="detail-tab-btn" data-tab="history"><i class='bx bx-history'></i> Lịch sử làm bài</button>
+                </div>
+
+                <!-- Tab: Nội dung đề thi -->
+                <div id="tab-content" class="tab-pane active" style="display: flex; flex-direction: column; flex: 1; min-height: 0;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h3 style="margin: 0; font-size: 1.1rem;">Danh sách câu hỏi (<span id="detail-preview-count">0</span>)</h3>
+                        <button id="btn-toggle-edit-exam" class="btn-ghost" style="font-size: 0.9rem; padding: 6px 12px;">
+                            <i class='bx bx-pencil'></i> Chỉnh sửa
+                        </button>
+                    </div>
+                    <div class="preview-scroll-area" id="detail-question-list" style="flex: 1; overflow-y: auto; padding-right: 10px;">
+                        <!-- Danh sách câu hỏi render ở đây -->
+                    </div>
+                    <div id="detail-edit-actions" class="hidden" style="margin-top: 15px; text-align: right; border-top: 1px solid var(--gray-200); padding-top: 15px;">
+                        <button class="btn-primary" id="btn-save-edit-exam"><i class='bx bx-save'></i> Lưu thay đổi</button>
+                    </div>
+                </div>
+
+                <!-- Tab: Lịch sử & Thống kê -->
+                <div id="tab-history" class="tab-pane hidden" style="display: flex; flex-direction: column; flex: 1; min-height: 0;">
+                    <div id="history-container" style="flex: 1; overflow-y: auto; padding-right: 10px;">
+                        <!-- Lịch sử và Thống kê render ở đây -->
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </section>
+
+    <!-- Modal Xóa bài thi -->
+    <div id="overlay" class="overlay hidden"></div>
+    <div id="delete-modal" class="modal hidden glass-panel">
+        <h3>Xác nhận xóa</h3>
+        <p>Bạn có chắc chắn muốn xóa đề thi này không? Hành động này không thể hoàn tác.</p>
+        <div class="modal-actions">
+            <button class="btn-ghost" id="btn-cancel-delete">Hủy</button>
+            <button class="btn-danger" id="btn-confirm-delete">Xóa</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
