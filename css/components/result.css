@@ -1,0 +1,61 @@
+/* Result Section */
+.result-summary {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--bg-card);
+}
+.score-circle {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    border: 6px solid var(--primary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+.score-circle span {
+    font-size: 2.5rem;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--primary);
+    line-height: 1;
+}
+.result-stats {
+    display: flex;
+    gap: 30px;
+    width: 100%;
+    justify-content: center;
+}
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.05rem;
+    font-weight: 500;
+}
+.stat-item.correct { color: var(--success); }
+.stat-item.incorrect { color: var(--danger); }
+.stat-item.unattempted { color: var(--gray-500); }
+.stat-item i { font-size: 1.25rem; }
+
+.review-section {
+    max-width: 800px;
+    margin: 0 auto;
+}
+.review-item {
+    margin-bottom: 24px;
+}
+.review-item .question-card {
+    padding: 20px 24px;
+}
+
+.d-mobile {
+    display: none;
+}
+

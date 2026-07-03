@@ -4,14 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hệ thống Thi Trắc Nghiệm Online</title>
+    <!-- PWA: cài đặt & offline -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4F46E5">
+    <link rel="icon" href="assets/icons/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="assets/icons/icon.svg">
     <!-- Google Fonts: Inter & Outfit cho thiết kế hiện đại -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
     <!-- Boxicons cho icon nhẹ và đẹp -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <!-- File CSS tự định nghĩa -->
-    <link rel="stylesheet" href="style.css">
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
@@ -109,10 +114,19 @@
     <!-- 3. MÀN HÌNH LÀM BÀI (QUIZ VIEW) -->
     <section id="quiz-view" class="view-section hidden">
         <header class="quiz-header">
-            <div class="quiz-info">
-                <h2 id="quiz-running-title">Đang tải...</h2>
+            <div class="quiz-info" style="display: flex; align-items: center; gap: 10px;">
+                <button id="btn-quit-quiz" class="btn-ghost" style="padding: 4px 8px; font-size: 1.2rem; color: var(--gray-600);" title="Thoát">
+                    <i class='bx bx-arrow-back'></i>
+                </button>
+                <div class="quiz-progress-top" id="quiz-progress-top" style="font-weight: 600; color: var(--gray-800); margin: 0; padding: 0; background: none; border: none; font-size: 1rem;">
+                    Câu <span id="current-q-num">1</span> / <span id="total-q-num">10</span>
+                </div>
             </div>
-            <div class="quiz-meta">
+            <div class="quiz-meta" style="display: flex; gap: 10px; align-items: center;">
+                <button id="btn-toggle-view-mode" class="btn-outline hide-on-mobile" style="padding: 4px 10px; font-size: 0.85rem;" title="Chuyển chế độ xem">
+                    <i class='bx bx-list-ul'></i> Danh sách
+                </button>
+                <button class="btn-danger" id="btn-submit-quiz" style="padding: 4px 12px; font-size: 0.9rem; border-radius: 6px;"><i class='bx bx-check-double'></i> <span class="hide-on-mobile">Nộp bài</span></button>
                 <span class="timer-badge">
                     <i class='bx bx-time-five'></i>
                     <span id="quiz-timer">00:00</span>
@@ -123,9 +137,6 @@
         <main class="quiz-layout">
             <!-- Vùng câu hỏi chính (Left) -->
             <div class="quiz-main-area" id="quiz-main-area">
-                <div class="quiz-progress-top" id="quiz-progress-top">
-                    Câu <span id="current-q-num">1</span> / <span id="total-q-num">10</span>
-                </div>
                 
                 <div id="questions-container">
                     <!-- Dynamic question cards render here -->
@@ -144,11 +155,8 @@
                     <h3 style="font-size: 1rem;">Danh sách câu hỏi</h3>
                     <button class="btn-close-sidebar d-mobile" id="btn-close-sidebar" style="background:none; border:none; font-size:1.5rem; cursor:pointer;"><i class='bx bx-x'></i></button>
                 </div>
-                <div class="question-palette" id="question-palette">
+                <div class="question-palette" id="question-palette" style="padding-bottom: 20px;">
                     <!-- Palette render từ JS -->
-                </div>
-                <div class="sidebar-footer">
-                    <button class="btn-danger w-100" id="btn-submit-quiz" style="padding: 12px; font-size: 1rem; border-radius: 8px;"><i class='bx bx-check-double'></i> Nộp bài thi</button>
                 </div>
             </aside>
             
@@ -232,17 +240,9 @@
                     
                     <div class="form-group">
                         <label>Chế độ làm bài</label>
-                        <select id="start-mode" style="background: white;">
+                        <select id="start-mode" class="form-control">
                             <option value="exam">Thi thật (Đếm ngược thời gian)</option>
                             <option value="practice">Luyện tập (Hiển thị đáp án ngay)</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group" style="margin-top: 15px;">
-                        <label>Chế độ hiển thị</label>
-                        <select id="start-view-mode" style="background: white;">
-                            <option value="single">Xem từng câu (Cuộn ngang)</option>
-                            <option value="list">Xem toàn bộ danh sách (Cuộn dọc)</option>
                         </select>
                     </div>
 
@@ -303,6 +303,11 @@
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <!-- Nút chuyển đổi giao diện Sáng/Tối -->
+    <button id="btn-theme-toggle" class="btn-theme-toggle glass-panel" title="Chuyển chế độ giao diện">
+        <i class='bx bx-moon'></i>
+    </button>
+
+    <script type="module" src="js/app.js"></script>
 </body>
 </html>

@@ -1,0 +1,236 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: 0.95rem; /* Giảm font-size tổng thể để giao diện gọn gàng hơn */
+    background-color: var(--bg-main);
+    color: var(--gray-800);
+    line-height: 1.5;
+    background-image: 
+        radial-gradient(at 0% 0%, hsla(253,16%,7%,0) 0, transparent 50%), 
+        radial-gradient(at 50% 0%, hsla(225,39%,30%,0) 0, transparent 50%), 
+        radial-gradient(at 100% 0%, hsla(339,49%,30%,0) 0, transparent 50%);
+    background-attachment: fixed;
+    min-height: 100vh;
+}
+
+.no-scroll {
+    overflow: hidden;
+    height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    color: var(--gray-900);
+}
+
+/* Utils */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.view-section {
+    min-height: 100vh;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Animation for Modal */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+/* Tabs trong Detail View */
+.detail-tabs {
+    display: flex;
+    gap: 10px;
+    border-bottom: 2px solid var(--gray-200);
+    margin-bottom: 20px;
+}
+.detail-tab-btn {
+    background: transparent;
+    border: none;
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--gray-500);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.detail-tab-btn:hover {
+    color: var(--primary);
+}
+.detail-tab-btn.active {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+}
+
+.tab-pane {
+    display: none;
+}
+.tab-pane.active {
+    display: flex;
+}
+
+/* History Mini Dashboard & Table */
+.history-dashboard {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 24px;
+}
+.history-stat-card {
+    background: var(--primary-light);
+    border-radius: var(--border-radius-md);
+    padding: 16px;
+    text-align: center;
+    border: 1px solid rgba(79, 70, 229, 0.1);
+}
+.history-stat-card h4 {
+    font-size: 0.85rem;
+    color: var(--gray-600);
+    margin-bottom: 5px;
+}
+.history-stat-card .val {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+.history-table-wrapper {
+    background: var(--bg-card);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+}
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.history-table th, .history-table td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--gray-200);
+    font-size: 0.9rem;
+}
+.history-table th {
+    background: var(--gray-50);
+    font-weight: 600;
+    color: var(--gray-600);
+}
+.history-table tr:last-child td {
+    border-bottom: none;
+}
+.history-table tr:hover td {
+    background: var(--gray-50);
+}
+.badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: var(--gray-200);
+    color: var(--gray-700);
+}
+.badge.exam {
+    background: var(--primary-light);
+    color: var(--primary);
+}
+.badge.practice {
+    background: var(--success-light);
+    color: var(--success);
+}
+
+/* Glassmorphism Classes */
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--glass-shadow);
+}
+
+/* Buttons */
+button {
+    font-family: var(--font-body);
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: var(--border-radius-md);
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    color: white;
+}
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.3);
+}
+
+.btn-outline {
+    background-color: transparent;
+    color: var(--gray-800);
+    border: 1px solid var(--gray-300);
+}
+.btn-outline:hover {
+    background-color: var(--gray-100);
+    border-color: var(--gray-400);
+}
+
+.btn-danger {
+    background-color: var(--danger);
+    color: white;
+}
+.btn-danger:hover {
+    background-color: #DC2626;
+}
+
+.btn-ghost {
+    background-color: transparent;
+    color: var(--gray-600);
+}
+.btn-ghost:hover {
+    background-color: var(--gray-200);
+    color: var(--gray-900);
+}
+.w-100 {
+    width: 100%;
+}
+

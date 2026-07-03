@@ -1,0 +1,20 @@
+{
+    "name": "EduQuiz - Hệ thống Thi Trắc Nghiệm Online",
+    "short_name": "EduQuiz",
+    "description": "Tạo đề thi, luyện tập và thi thử trắc nghiệm ngay trên trình duyệt, hoạt động cả khi offline.",
+    "start_url": "./index.html",
+    "scope": "./",
+    "display": "standalone",
+    "orientation": "portrait-primary",
+    "background_color": "#F3F4F6",
+    "theme_color": "#4F46E5",
+    "lang": "vi",
+    "icons": [
+        {
+            "src": "assets/icons/icon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        }
+    ]
+}
